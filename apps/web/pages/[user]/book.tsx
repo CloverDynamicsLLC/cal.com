@@ -114,6 +114,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         uid: asStringOrThrow(context.query.rescheduleUid),
       },
       select: {
+        agreedFee: true,
+        currency: true,
         description: true,
         attendees: {
           select: {
