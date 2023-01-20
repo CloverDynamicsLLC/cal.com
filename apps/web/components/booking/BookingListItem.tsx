@@ -16,7 +16,6 @@ import TableActions, { ActionType } from "@components/ui/TableActions";
 type BookingItem = inferQueryOutput<"viewer.bookings">["bookings"][number];
 
 function BookingListItem(booking: BookingItem) {
-  console.log(booking);
   const { t, i18n } = useLocale();
   const utils = trpc.useContext();
   const [rejectionReason, setRejectionReason] = useState<string>("");
