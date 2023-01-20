@@ -35,6 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     select: {
       id: true,
       userId: true,
+      agreedFee: true,
+      currency: true,
       user: {
         select: {
           id: true,
@@ -67,6 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       uid: true,
       eventTypeId: true,
       destinationCalendar: true,
+      status: true,
     },
   });
 
@@ -116,6 +119,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     description: bookingToDelete?.description || "",
     startTime: bookingToDelete?.startTime ? dayjs(bookingToDelete.startTime).format() : "",
     endTime: bookingToDelete?.endTime ? dayjs(bookingToDelete.endTime).format() : "",
+    agreedFee: bookingToDelete.agreedFee,
+    currency: bookingToDelete.currency,
     organizer: {
       email: organizer.email,
       name: organizer.name ?? "Nameless",
@@ -127,6 +132,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     location: bookingToDelete?.location,
     destinationCalendar: bookingToDelete?.destinationCalendar || bookingToDelete?.user.destinationCalendar,
     cancellationReason: cancellationReason,
+    status: bookingToDelete.status,
   };
 
   // Hook up the webhook logic here
@@ -178,6 +184,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       description: bookingToDelete.description ?? "",
       startTime: bookingToDelete.startTime.toISOString(),
       endTime: bookingToDelete.endTime.toISOString(),
+      agreedFee: bookingToDelete.agreedFee,
       organizer: {
         email: bookingToDelete.user?.email ?? "dev@calendso.com",
         name: bookingToDelete.user?.name ?? "no user",

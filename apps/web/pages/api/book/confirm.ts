@@ -14,6 +14,8 @@ import prisma from "@lib/prisma";
 import { BookingConfirmBody } from "@lib/types/booking";
 
 import { getTranslation } from "@server/lib/i18n";
+import getSubscribers from "@lib/webhooks/subscriptions";
+import sendPayload from "@lib/webhooks/sendPayload";
 
 const authorized = async (
   currentUser: Pick<User, "id">,
@@ -42,6 +44,26 @@ const authorized = async (
 };
 
 const log = logger.getChildLogger({ prefix: ["[api] book:user"] });
+
+const triggerWebHook = async (webhook, user, event, bookingId, reqBody) => {
+  const subscribers = await getSubscribers(user.id, webhook);
+  const promises = subscribers.map((sub) =>
+    sendPayload(
+      webhook,
+      new Date().toISOString(),
+      sub.subscriberUrl,
+      {
+        ...event,
+        bookingId,
+        metadata: reqBody.metadata,
+      },
+      sub.payloadTemplate
+    ).catch((e) => {
+      console.error(`Error executing webhook for event: ${webhook}, URL: ${sub.subscriberUrl}`, e);
+    })
+  );
+  await Promise.all(promises);
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req: req });
@@ -86,11 +108,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: bookingId,
       },
       select: {
+        agreedFee: true,
         title: true,
         description: true,
         startTime: true,
         endTime: true,
         confirmed: true,
+        rejected: true,
         attendees: true,
         eventTypeId: true,
         location: true,
@@ -99,6 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         uid: true,
         payment: true,
         destinationCalendar: true,
+        status: true,
       },
     });
 
@@ -134,6 +159,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       description: booking.description,
       startTime: booking.startTime.toISOString(),
       endTime: booking.endTime.toISOString(),
+      agreedFee: booking.agreedFee,
       organizer: {
         email: currentUser.email,
         name: currentUser.name || "Unnamed",
@@ -144,6 +170,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       location: booking.location ?? "",
       uid: booking.uid,
       destinationCalendar: booking?.destinationCalendar || currentUser.destinationCalendar,
+      status: booking.status,
+      confirmed: booking.confirmed,
+      rejected: booking.rejected,
     };
 
     if (reqBody.confirmed) {
@@ -171,7 +200,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await sendScheduledEmails({ ...evt, additionInformation: metadata });
       }
 
-      await prisma.booking.update({
+      const confirmedBooking = await prisma.booking.update({
         where: {
           id: bookingId,
         },
@@ -182,13 +211,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         },
       });
+      const confirmedEvent: CalendarEvent = {
+        ...evt,
+        status: confirmedBooking.status,
+      };
+
+      await triggerWebHook("BOOKING_CONFIRMED", session.user, confirmedEvent, booking.uid, reqBody);
 
       res.status(204).end();
     } else {
       await refund(booking, evt);
       const rejectionReason = asStringOrNull(req.body.reason) || "";
       evt.rejectionReason = rejectionReason;
-      await prisma.booking.update({
+      const rejectedBooking = await prisma.booking.update({
         where: {
           id: bookingId,
         },
@@ -199,6 +234,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
+      const rejectedEvent: CalendarEvent = {
+        ...evt,
+        status: rejectedBooking.status,
+      };
+
+      await triggerWebHook("BOOKING_REJECTED", session.user, rejectedEvent, booking.uid, reqBody);
       await sendDeclinedEmails(evt);
 
       res.status(204).end();
