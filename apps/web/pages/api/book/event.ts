@@ -329,7 +329,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
   // Initialize EventManager with credentials
   const rescheduleUid = reqBody.rescheduleUid;
-  const rescheduledByCoach = !!rescheduleUid && currentUser?.email === organizer?.email;
+  const rescheduledByOwner = !!rescheduleUid && currentUser?.email === organizer?.email;
 
   const evt: CalendarEvent = {
     type: eventType.title,
@@ -349,7 +349,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     location: reqBody.location, // Will be processed by the EventManager later.
     /** For team events, we will need to handle each member destinationCalendar eventually */
     destinationCalendar: eventType.destinationCalendar || users[0].destinationCalendar,
-    requiresCustomerConfirmation: rescheduledByCoach,
+    requiresCustomerConfirmation: rescheduledByOwner,
     rescheduled: !!rescheduleUid,
     customerConfirmed: false,
   };
@@ -384,7 +384,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         endTime: dayjs(evt.endTime).toDate(),
         description: evt.description,
         confirmed: (!eventType.requiresConfirmation && !eventType.price) || !!rescheduleUid,
-        requiresCustomerConfirmation: rescheduledByCoach,
+        requiresCustomerConfirmation: rescheduledByOwner,
         rescheduled: !!rescheduleUid,
         location: evt.location,
         eventType: {

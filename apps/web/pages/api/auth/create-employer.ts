@@ -8,7 +8,7 @@ import { WEBHOOK_TRIGGER_EVENTS } from "@lib/webhooks/constants";
 
 import { IdentityProvider } from ".prisma/client";
 
-const getEmployerEmail = (id: number) => `employer_${id}@coach.com`;
+const getEmployerEmail = (id: number) => `employer_${id}@user.com`;
 const employerPassword = process.env.EMPLOYER_PASSWORD || "123456";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     data: {
       userId: user.id,
       users: { connect: { id: user.id } },
-      title: "Coaching",
+      title: "User",
       slug: "default-book",
       length: 60,
       disableGuests: true,
@@ -99,8 +99,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           id: v4(),
           userId: user.id,
-          subscriberUrl: `${webhookUrl}/api/calcom/appointments/rescheduled/coachConfirmed`,
-          eventTriggers: "RESCHEDULED_BOOKING_COACH_CONFIRMED",
+          subscriberUrl: `${webhookUrl}/api/appointments/rescheduled/confirmed`,
+          eventTriggers: "RESCHEDULED_BOOKING_OWNER_CONFIRMED",
         },
         {
           id: v4(),
@@ -123,8 +123,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           id: v4(),
           userId: user.id,
-          subscriberUrl: `${webhookUrl}/api/calcom/appointments/rescheduled/coachConfirmed`,
-          eventTriggers: "RESCHEDULED_BOOKING_COACH_CONFIRMED",
+          subscriberUrl: `${webhookUrl}/api/appointments/rescheduled/confirmed`,
+          eventTriggers: "RESCHEDULED_BOOKING_OWNER_CONFIRMED",
         },
       ],
     }));
