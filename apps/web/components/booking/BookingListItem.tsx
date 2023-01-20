@@ -168,20 +168,20 @@ function BookingListItem(booking: BookingItem) {
               </span>
             </div>
           )}
-          {booking.rescheduled && booking.requiresCustomerConfirmation && !booking.customerConfirmed && (
+          {/*{booking.rescheduled && booking.requiresCustomerConfirmation && !booking.customerConfirmed && (
             <div className="mt-3 text-sm text-gray-900">
               <span className="text-sm font-medium text-red-600">
                 Rescheduled appointment requires customer&apos;s confirmation
               </span>
             </div>
-          )}
-          {booking.rescheduled && booking.requiresCustomerConfirmation && booking.customerConfirmed && (
+          )}*/}
+          {/*{booking.rescheduled && booking.requiresCustomerConfirmation && booking.customerConfirmed && (
             <div className="mt-3 text-sm text-gray-900">
               <span className="text-sm font-medium text-green-600">
                 Rescheduled appointment is confirmed by the customer
               </span>
             </div>
-          )}
+          )}*/}
         </td>
 
         <td className="whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4">
