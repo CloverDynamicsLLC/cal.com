@@ -114,6 +114,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           subscriberUrl: `${webhookUrl}/api/calcom/appointments/rejected`,
           eventTriggers: "BOOKING_REJECTED",
         },
+        {
+          id: v4(),
+          userId: user.id,
+          subscriberUrl: `${webhookUrl}/api/calcom/appointments/rescheduled/customerConfirmed`,
+          eventTriggers: "RESCHEDULED_BOOKING_CUSTOMER_CONFIRMED",
+        },
+        {
+          id: v4(),
+          userId: user.id,
+          subscriberUrl: `${webhookUrl}/api/calcom/appointments/rescheduled/coachConfirmed`,
+          eventTriggers: "RESCHEDULED_BOOKING_COACH_CONFIRMED",
+        },
       ],
     }));
 

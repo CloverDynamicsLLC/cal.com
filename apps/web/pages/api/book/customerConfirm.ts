@@ -39,7 +39,7 @@ async function getBooking(bookingId) {
   });
 }
 
-async function setCustomerConfirmed(bookingId){
+async function setCustomerConfirmed(bookingId) {
   await prisma.booking.update({
     where: {
       uid: bookingId,
@@ -86,7 +86,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     await setCustomerConfirmed(appointmentId);
-    //await triggerWebHook("RESCHEDULED_BOOKING_USER_CONFIRMED", booking.userId, { customerConfirmed: true }, bookingId);
+    await triggerWebHook(
+      "RESCHEDULED_BOOKING_CUSTOMER_CONFIRMED",
+      booking.userId,
+      { customerConfirmed: true },
+      booking.uid
+    );
     res.status(204).end();
   }
 }
