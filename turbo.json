@@ -50,7 +50,9 @@
         "$TANDEM_CLIENT_ID",
         "$TANDEM_CLIENT_SECRET",
         "$ZOOM_CLIENT_ID",
-        "$ZOOM_CLIENT_SECRET"
+        "$ZOOM_CLIENT_SECRET",
+        "$TWILIO_ACCOUNT_SID",
+        "$TWILIO_AUTH_TOKEN"
       ],
       "outputs": [".next/**"]
     },

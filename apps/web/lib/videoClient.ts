@@ -7,6 +7,7 @@ import { EventResult } from "@lib/events/EventManager";
 import { PartialReference } from "@lib/events/EventManager";
 import Huddle01VideoApiAdapter from "@lib/integrations/Huddle01/Huddle01VideoApiAdapter";
 import JitsiVideoApiAdapter from "@lib/integrations/Jitsi/JitsiVideoApiAdapter";
+import TwilioVideoApiAdapter from "@lib/integrations/Twilio/TwilioVideoApiAdapter";
 import logger from "@lib/logger";
 
 import DailyVideoApiAdapter from "./integrations/Daily/DailyVideoApiAdapter";
@@ -55,6 +56,9 @@ const getVideoAdapters = (withCredentials: Credential[]): VideoApiAdapter[] =>
         break;
       case "tandem_video":
         acc.push(TandemVideoApiAdapter(cred));
+        break;
+      case "twilio_video":
+        acc.push(TwilioVideoApiAdapter());
         break;
       default:
         break;

@@ -18,6 +18,8 @@ export function getIntegrationName(name: string) {
       return "Jitsi Meet";
     case "huddle01_video":
       return "Huddle01";
+    case "twilio_video":
+      return "Twilio";
     case "tandem_video":
       return "Tandem";
   }

@@ -1,8 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { JSONObject } from "superjson/dist/types";
+import { date } from "zod";
 
-import { asStringOrNull } from "@lib/asStringOrNull";
+import { asStringOrNull, asStringOrThrow } from "@lib/asStringOrNull";
 import { getWorkingHours } from "@lib/availability";
 import prisma from "@lib/prisma";
 import { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -178,8 +179,30 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     },
     eventType.availability.length ? eventType.availability : user.availability
   );
-
   eventTypeObject.availability = [];
+
+  let searchDate, maxDate;
+  if (typeof dateParam === "string") {
+    searchDate = new Date(dateParam.split("+")[0]);
+    maxDate = new Date(searchDate.getTime() + 60 * 60 * 24 * 1000);
+  }
+
+  const bookedTimeslotsForDate = await prisma.booking.findMany({
+    where: {
+      confirmed: {
+        equals: true,
+      },
+      startTime: {
+        gte: searchDate,
+        lte: maxDate,
+      },
+    },
+    select: {
+      startTime: true,
+    },
+  });
+
+  const bookedTimeslots: string[] = bookedTimeslotsForDate.map((booking) => booking.startTime.toISOString());
 
   return {
     props: {
@@ -194,6 +217,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       date: dateParam,
       eventType: eventTypeObject,
       workingHours,
+      bookedTimeslots,
       trpcState: ssr.dehydrate(),
     },
   };

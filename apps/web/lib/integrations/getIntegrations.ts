@@ -22,7 +22,8 @@ export type Integration = {
     | "stripe_payment"
     | "jitsi_video"
     | "huddle01_video"
-    | "metamask_web3";
+    | "metamask_web3"
+    | "twilio_video";
   title: string;
   imageSrc: string;
   description: string;
@@ -51,6 +52,14 @@ export const ALL_INTEGRATIONS = [
     type: "zoom_video",
     title: "Zoom",
     imageSrc: "integrations/zoom.svg",
+    description: "Video Conferencing",
+    variant: "conferencing",
+  },
+  {
+    installed: true,
+    type: "twilio_video",
+    title: "Twilio",
+    imageSrc: "integrations/twilio.svg",
     description: "Video Conferencing",
     variant: "conferencing",
   },
@@ -154,6 +163,7 @@ export function hasIntegration(integrations: IntegrationMeta, type: string): boo
       (type === "daily_video" ||
         type === "jitsi_video" ||
         type === "huddle01_video" ||
+        type === "twilio_video" ||
         i.credentials.length > 0)
   );
 }

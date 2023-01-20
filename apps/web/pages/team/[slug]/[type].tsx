@@ -93,7 +93,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   });
 
   eventTypeObject.availability = [];
-
+  const bookedTimeslots: string[] = [];
   return {
     props: {
       profile: {
@@ -107,6 +107,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       date: dateParam,
       eventType: eventTypeObject,
       workingHours,
+      bookedTimeslots
     },
   };
 };

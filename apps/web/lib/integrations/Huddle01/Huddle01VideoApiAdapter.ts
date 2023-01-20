@@ -21,7 +21,6 @@ const Huddle01VideoApiAdapter = (): VideoApiAdapter => {
       const res = await fetch(
         "https://wpss2zlpb9.execute-api.us-east-1.amazonaws.com/new-meeting?utmCampaign=cal.com&utmSource=partner&utmMedium=calendar"
       );
-
       const { url } = await handleErrorsJson(res);
 
       return Promise.resolve({

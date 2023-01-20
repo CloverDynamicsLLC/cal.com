@@ -36,7 +36,8 @@
     "prettier-plugin-tailwindcss": "^0.1.6"
   },
   "dependencies": {
-    "turbo": "latest"
+    "turbo": "latest",
+    "twilio": "^3.76.1"
   },
   "lint-staged": {
     "apps/**/*.{js,ts,jsx,tsx}": [

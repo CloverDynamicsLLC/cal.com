@@ -5,6 +5,7 @@ import { v5 as uuidv5 } from "uuid";
 
 import { FAKE_DAILY_CREDENTIAL } from "@lib/integrations/Daily/DailyVideoApiAdapter";
 import { FAKE_HUDDLE_CREDENTIAL } from "@lib/integrations/Huddle01/Huddle01VideoApiAdapter";
+import { FAKE_TWILIO_CREDENTIAL } from "@lib/integrations/Twilio/TwilioVideoApiAdapter";
 import { createEvent, updateEvent } from "@lib/integrations/calendar/CalendarManager";
 import { AdditionInformation, CalendarEvent } from "@lib/integrations/calendar/interfaces/Calendar";
 import { LocationType } from "@lib/location";
@@ -57,10 +58,17 @@ export const isTandem = (location: string): boolean => {
   return location === "integrations:tandem";
 };
 
-export const isDedicatedIntegration = (location: string): boolean => {
-  return isZoom(location) || isDaily(location) || isHuddle01(location) || isTandem(location);
+export const isTwilio = (location: string): boolean => {
+  return location === "integrations:twilio";
 };
 
+export const isDedicatedIntegration = (location: string): boolean => {
+  return (
+    isZoom(location) || isDaily(location) || isHuddle01(location) || isTandem(location) || isTwilio(location)
+  );
+};
+
+console.log(createMeeting);
 export const getLocationRequestFromIntegration = (location: string) => {
   if (
     location === LocationType.GoogleMeet.valueOf() ||
@@ -68,7 +76,8 @@ export const getLocationRequestFromIntegration = (location: string) => {
     location === LocationType.Daily.valueOf() ||
     location === LocationType.Jitsi.valueOf() ||
     location === LocationType.Huddle01.valueOf() ||
-    location === LocationType.Tandem.valueOf()
+    location === LocationType.Tandem.valueOf() ||
+    location === LocationType.Twilio.valueOf()
   ) {
     const requestId = uuidv5(location, uuidv5.URL);
 
@@ -121,6 +130,7 @@ export default class EventManager {
       this.videoCredentials.push(FAKE_DAILY_CREDENTIAL);
     }
     this.videoCredentials.push(FAKE_HUDDLE_CREDENTIAL);
+    this.videoCredentials.push(FAKE_TWILIO_CREDENTIAL);
   }
 
   /**

@@ -32,7 +32,7 @@ dayjs.extend(customParseFormat);
 
 type Props = AvailabilityTeamPageProps | AvailabilityPageProps;
 
-const AvailabilityPage = ({ profile, eventType, workingHours }: Props) => {
+const AvailabilityPage = ({ profile, eventType, workingHours, bookedTimeslots }: Props) => {
   const router = useRouter();
   const { rescheduleUid } = router.query;
   const { isReady, Theme } = useTheme(profile.theme);
@@ -236,6 +236,7 @@ const AvailabilityPage = ({ profile, eventType, workingHours }: Props) => {
                     date={selectedDate}
                     users={eventType.users}
                     schedulingType={eventType.schedulingType ?? null}
+                    bookedTimeslots={bookedTimeslots}
                   />
                 )}
               </div>
