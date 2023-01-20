@@ -41,7 +41,8 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
   const router = useRouter();
   const { rescheduleUid, isPreview } = router.query;
   const bookedTimeslotsToDate = bookedTimeslots.map((timeslot) => dayjs(timeslot));
-
+  const bookedTimeslotsToDate = bookedTimeslots.map((timeslot) => dayjs(timeslot));
+  console.log(bookedTimeslotsToDate);
   const { slots, loading, error } = useSlots({
     date,
     slotInterval,

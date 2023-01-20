@@ -204,6 +204,27 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   const bookedTimeslots: string[] = bookedTimeslotsForDate.map((booking) => booking.startTime.toISOString());
 
+  let searchDate, maxDate;
+  if (typeof dateParam === "string") {
+    searchDate = new Date(dateParam.split("+")[0]);
+    maxDate = new Date(searchDate.getTime() + 60 * 60 * 24 * 1000);
+  }
+
+  const bookedTimeslotsForDate = await prisma.booking.findMany({
+    where: {
+      startTime: {
+        gte: searchDate,
+        lte: maxDate,
+      },
+    },
+    select: {
+      startTime: true,
+    },
+  });
+
+  const bookedTimeslots: string[] = bookedTimeslotsForDate.map((booking) => booking.startTime.toISOString());
+  console.log(bookedTimeslots);
+
   return {
     props: {
       profile: {
