@@ -23,6 +23,9 @@ export const _BookingModel = z.object({
   rejectionReason: z.string().nullish(),
   agreedFee: z.number().int(),
   currency: z.string(),
+  requiresCustomerConfirmation: z.boolean(),
+  customerConfirmed: z.boolean(),
+  rescheduled: z.boolean(),
 })
 
 export interface CompleteBooking extends z.infer<typeof _BookingModel> {

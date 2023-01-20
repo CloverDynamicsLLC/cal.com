@@ -34,6 +34,7 @@ import getSubscribers from "@lib/webhooks/subscriptions";
 import { getTranslation } from "@server/lib/i18n";
 
 import verifyAccount from "../../../web3/utils/verifyAccount";
+import {getSession} from "@lib/auth";
 
 dayjs.extend(dayjsBusinessTime);
 dayjs.extend(utc);
@@ -182,6 +183,8 @@ const getUserNameWithBookingCounts = async (eventTypeId: number, selectedUserNam
 type User = Prisma.UserGetPayload<typeof userSelect>;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getSession({ req: req });
+  const currentUser = session?.user;
   const reqBody = req.body as BookingCreateBody;
   const eventTypeId = reqBody.eventTypeId;
   const tAttendees = await getTranslation(reqBody.language ?? "en", "common");
@@ -254,6 +257,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: users[0].id,
     },
     select: {
+      email: true,
       locale: true,
     },
   });
@@ -325,6 +329,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
   // Initialize EventManager with credentials
   const rescheduleUid = reqBody.rescheduleUid;
+  const rescheduledByCoach = !!rescheduleUid && currentUser?.email === organizer?.email;
 
   const evt: CalendarEvent = {
     type: eventType.title,
@@ -343,7 +348,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     location: reqBody.location, // Will be processed by the EventManager later.
     /** For team events, we will need to handle each member destinationCalendar eventually */
     destinationCalendar: eventType.destinationCalendar || users[0].destinationCalendar,
-    requiresCustomerConfirmation: !!rescheduleUid,
+    requiresCustomerConfirmation: rescheduledByCoach,
     rescheduled: !!rescheduleUid,
     customerConfirmed: false,
   };
@@ -377,7 +382,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         endTime: dayjs(evt.endTime).toDate(),
         description: evt.description,
         confirmed: (!eventType.requiresConfirmation && !eventType.price) || !!rescheduleUid,
-        requiresCustomerConfirmation: !!rescheduleUid,
+        requiresCustomerConfirmation: rescheduledByCoach,
         rescheduled: !!rescheduleUid,
         location: evt.location,
         eventType: {
