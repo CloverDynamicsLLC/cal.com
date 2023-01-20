@@ -160,6 +160,14 @@ function BookingListItem(booking: BookingItem) {
               <a href={"mailto:" + booking.attendees[0].email}>{booking.attendees[0].email}</a>
             </div>
           )}
+          {booking.agreedFee !== 0 && (
+            <div className="mt-3 text-sm text-gray-900">
+              <span className="text-sm font-medium">Agreed fee:</span>
+              <span className="ml-3">
+                {booking.agreedFee} {booking.currency}
+              </span>
+            </div>
+          )}
         </td>
 
         <td className="whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4">

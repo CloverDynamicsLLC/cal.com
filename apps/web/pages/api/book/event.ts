@@ -330,6 +330,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     description,
     startTime: reqBody.start,
     endTime: reqBody.end,
+    agreedFee: reqBody.agreedFee,
     organizer: {
       name: users[0].name || "Nameless",
       email: users[0].email || "Email-less",
@@ -369,6 +370,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         uid,
         title: evt.title,
+        agreedFee: Number(evt.agreedFee),
         startTime: dayjs(evt.startTime).toDate(),
         endTime: dayjs(evt.endTime).toDate(),
         description: evt.description,
@@ -413,6 +415,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     booking = await createBooking();
     evt.uid = booking.uid;
+    evt.currency = booking.currency;
   } catch (_err) {
     const err = getErrorFromUnknown(_err);
     log.error(`Booking ${eventTypeId} failed`, "Error when saving booking to db", err.message);

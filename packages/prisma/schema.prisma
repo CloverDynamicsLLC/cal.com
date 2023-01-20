@@ -246,6 +246,8 @@ model Booking {
   destinationCalendar DestinationCalendar?
   cancellationReason  String?
   rejectionReason     String?
+  agreedFee           Int                  @default(100)
+  currency            String               @default("USD")
 }
 
 model Schedule {

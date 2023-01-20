@@ -40,6 +40,8 @@ export interface CalendarEvent {
   startTime: string;
   endTime: string;
   description?: string | null;
+  agreedFee: number;
+  currency?: string;
   team?: {
     name: string;
     members: string[];
