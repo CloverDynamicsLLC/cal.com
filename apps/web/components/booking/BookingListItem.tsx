@@ -170,7 +170,7 @@ function BookingListItem(booking: BookingItem) {
           )}
           {booking.agreedHours !== 0 && (
             <div className="mt-3 text-sm text-gray-900">
-              <span className="text-sm font-medium">Agreed Duration:</span>
+              <span className="text-sm font-medium">Agreed duration:</span>
               <span className="ml-3">{booking.agreedHours} h</span>
             </div>
           )}
