@@ -323,6 +323,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       (str, input) => str + "<br /><br />" + input.label + ":<br />" + input.value,
       ""
     );
+  // Initialize EventManager with credentials
+  const rescheduleUid = reqBody.rescheduleUid;
 
   const evt: CalendarEvent = {
     type: eventType.title,
@@ -341,6 +343,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     location: reqBody.location, // Will be processed by the EventManager later.
     /** For team events, we will need to handle each member destinationCalendar eventually */
     destinationCalendar: eventType.destinationCalendar || users[0].destinationCalendar,
+    requiresCustomerConfirmation: !!rescheduleUid,
+    rescheduled: !!rescheduleUid,
+    customerConfirmed: false,
   };
 
   if (eventType.schedulingType === SchedulingType.COLLECTIVE) {
@@ -349,9 +354,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: eventType.team?.name || "Nameless",
     }; // used for invitee emails
   }
-
-  // Initialize EventManager with credentials
-  const rescheduleUid = reqBody.rescheduleUid;
 
   async function createBooking() {
     // @TODO: check as metadata
@@ -375,6 +377,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         endTime: dayjs(evt.endTime).toDate(),
         description: evt.description,
         confirmed: (!eventType.requiresConfirmation && !eventType.price) || !!rescheduleUid,
+        requiresCustomerConfirmation: !!rescheduleUid,
+        rescheduled: !!rescheduleUid,
         location: evt.location,
         eventType: {
           connect: {

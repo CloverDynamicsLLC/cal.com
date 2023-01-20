@@ -248,6 +248,9 @@ model Booking {
   rejectionReason     String?
   agreedFee           Int                  @default(100)
   currency            String               @default("USD")
+  requiresCustomerConfirmation Boolean     @default(false)
+  customerConfirmed   Boolean              @default(false)
+  rescheduled         Boolean              @default(false)
 }
 
 model Schedule {

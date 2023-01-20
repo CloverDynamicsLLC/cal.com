@@ -16,6 +16,7 @@ import TableActions, { ActionType } from "@components/ui/TableActions";
 type BookingItem = inferQueryOutput<"viewer.bookings">["bookings"][number];
 
 function BookingListItem(booking: BookingItem) {
+  console.log(booking);
   const { t, i18n } = useLocale();
   const utils = trpc.useContext();
   const [rejectionReason, setRejectionReason] = useState<string>("");
@@ -165,6 +166,20 @@ function BookingListItem(booking: BookingItem) {
               <span className="text-sm font-medium">Agreed fee:</span>
               <span className="ml-3">
                 {booking.agreedFee} {booking.currency}
+              </span>
+            </div>
+          )}
+          {booking.rescheduled && booking.requiresCustomerConfirmation && !booking.customerConfirmed && (
+            <div className="mt-3 text-sm text-gray-900">
+              <span className="text-sm font-medium text-red-600">
+                Rescheduled appointment requires customer&apos;s confirmation
+              </span>
+            </div>
+          )}
+          {booking.rescheduled && booking.requiresCustomerConfirmation && booking.customerConfirmed && (
+            <div className="mt-3 text-sm text-gray-900">
+              <span className="text-sm font-medium text-green-600">
+                Rescheduled appointment is confirmed by the customer
               </span>
             </div>
           )}
