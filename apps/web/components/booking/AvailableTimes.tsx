@@ -1,6 +1,7 @@
 import { ExclamationIcon } from "@heroicons/react/solid";
 import { SchedulingType } from "@prisma/client";
 import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
@@ -22,6 +23,7 @@ type AvailableTimesProps = {
     username: string | null;
   }[];
   schedulingType: SchedulingType | null;
+  bookedTimeslots: string[];
 };
 
 const AvailableTimes: FC<AvailableTimesProps> = ({
@@ -33,10 +35,12 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
   timeFormat,
   users,
   schedulingType,
+  bookedTimeslots,
 }) => {
   const { t, i18n } = useLocale();
   const router = useRouter();
-  const { rescheduleUid } = router.query;
+  const { rescheduleUid, isPreview } = router.query;
+  const bookedTimeslotsToDate = bookedTimeslots.map((timeslot) => dayjs(timeslot));
 
   const { slots, loading, error } = useSlots({
     date,
@@ -54,6 +58,7 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
     setBrand(getComputedStyle(document.documentElement).getPropertyValue("--brand-color").trim());
   }, []);
 
+  const readOnlyMode = isPreview === "true";
   return (
     <div className="mt-8 flex flex-col text-center sm:mt-0 sm:w-1/3 sm:pl-4 md:-mb-5">
       <div className="mb-4 text-left text-lg font-light text-gray-600">
@@ -69,6 +74,9 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
         {!loading &&
           slots?.length > 0 &&
           slots.map((slot) => {
+            const slotIsBooked = !!bookedTimeslotsToDate.find(
+              (bookedSlot) => slot.time.diff(bookedSlot) === 0
+            );
             type BookingURL = {
               pathname: string;
               query: Record<string, string | number | string[] | undefined>;
@@ -81,7 +89,6 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
                 type: eventTypeId,
               },
             };
-
             if (rescheduleUid) {
               bookingUrl.query.rescheduleUid = rescheduleUid as string;
             }
@@ -91,18 +98,21 @@ const AvailableTimes: FC<AvailableTimesProps> = ({
             }
 
             return (
-              <div key={slot.time.format()}>
-                <Link href={bookingUrl}>
-                  <a
-                    className={classNames(
-                      "text-primary-500 hover:bg-brand hover:text-brandcontrast dark:hover:bg-brand dark:hover:text-brandcontrast mb-2 block rounded-sm border bg-white py-4 font-medium hover:text-white dark:border-transparent dark:bg-gray-600 dark:text-neutral-200 dark:hover:border-black",
-                      brand === "#fff" || brand === "#ffffff" ? "border-brandcontrast" : "border-brand"
-                    )}
-                    data-testid="time">
-                    {slot.time.format(timeFormat)}
-                  </a>
-                </Link>
-              </div>
+              !slotIsBooked && (
+                <div key={slot.time.format()}>
+                  <Link href={readOnlyMode ? "#" : bookingUrl}>
+                    <a
+                      className={classNames(
+                        "text-primary-500 hover:bg-brand hover:text-brandcontrast dark:hover:bg-brand dark:hover:text-brandcontrast mb-2 block rounded-sm border bg-white py-4 font-medium hover:text-white dark:border-transparent dark:bg-gray-600 dark:text-neutral-200 dark:hover:border-black",
+                        brand === "#fff" || brand === "#ffffff" ? "border-brandcontrast" : "border-brand",
+                        slotIsBooked || "disabled"
+                      )}
+                      data-testid="time">
+                      {slot.time.format(timeFormat)}
+                    </a>
+                  </Link>
+                </div>
+              )
             );
           })}
         {!loading && !error && !slots.length && (

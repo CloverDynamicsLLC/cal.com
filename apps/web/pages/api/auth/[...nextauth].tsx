@@ -38,6 +38,15 @@ const providers: Provider[] = [
         },
       });
 
+      if (credentials.autoLoginEmployer && user) {
+        return {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          name: user.name,
+        };
+      }
+
       if (!user) {
         throw new Error(ErrorCode.UserNotFound);
       }

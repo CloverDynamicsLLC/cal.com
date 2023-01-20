@@ -45,6 +45,7 @@ yarn-error.log*
 
 # Webstorm
 .idea
+.iml
 
 ### VisualStudioCode template
 .vscode/*

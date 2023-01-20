@@ -95,7 +95,32 @@ module.exports = () => plugins.reduce((acc, next) => next(acc), {
         source: '/call/:path*',
         destination: '/video/:path*',
         permanent: false
-      }
+      },
+      {
+        source: "/auth/forgot-password",
+        destination: "/404",
+        permanent: true,
+      },
+      {
+        source: "/auth/forgot-password/:id(\\d{1,})",
+        destination: "/404",
+        permanent: true,
+      },
+      /*{
+        source: "/bookings/:path",
+        destination: "/404",
+        permanent: true,
+      },*/
+      {
+        source: "/settings/:path",
+        destination: "/404",
+        permanent: true,
+      },
+      {
+        source: "/:user(\\d{1,})",
+        destination: "/404",
+        permanent: true,
+      },
     ];
   },
 });

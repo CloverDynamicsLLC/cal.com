@@ -17,7 +17,6 @@ import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
-import LicenseBanner from "@ee/components/LicenseBanner";
 import TrialBanner from "@ee/components/TrialBanner";
 import HelpMenuItemDynamic from "@ee/lib/intercom/HelpMenuItemDynamic";
 
@@ -142,12 +141,12 @@ export default function Shell(props: {
       icon: LinkIcon,
       current: router.asPath.startsWith("/event-types"),
     },
-    {
+    /*    {
       name: t("bookings"),
       href: "/bookings/upcoming",
       icon: CalendarIcon,
       current: router.asPath.startsWith("/bookings"),
-    },
+    },*/
     {
       name: t("availability"),
       href: "/availability",
@@ -160,12 +159,12 @@ export default function Shell(props: {
       icon: PuzzleIcon,
       current: router.asPath.startsWith("/integrations"),
     },
-    {
+    /*    {
       name: t("settings"),
       href: "/settings/profile",
       icon: CogIcon,
       current: router.asPath.startsWith("/settings"),
-    },
+    },*/
   ];
 
   useEffect(() => {
@@ -246,14 +245,6 @@ export default function Shell(props: {
                 </nav>
               </div>
               <TrialBanner />
-              <div className="m-2 rounded-sm p-2 pt-2 pr-2 hover:bg-gray-100">
-                <span className="hidden lg:inline">
-                  <UserDropdown />
-                </span>
-                <span className="hidden md:inline lg:hidden">
-                  <UserDropdown small />
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -265,7 +256,7 @@ export default function Shell(props: {
               props.flexChildrenContainer && "flex flex-col"
             )}>
             {/* show top navigation for md and smaller (tablet and phones) */}
-            <nav className="flex items-center justify-between border-b border-gray-200 bg-white p-4 md:hidden">
+            {/* <nav className="flex items-center justify-between border-b border-gray-200 bg-white p-4 md:hidden">
               <Link href="/event-types">
                 <a>
                   <Logo />
@@ -280,9 +271,8 @@ export default function Shell(props: {
                     </a>
                   </Link>
                 </button>
-                <UserDropdown small />
               </div>
-            </nav>
+            </nav> */}
             <div
               className={classNames(
                 props.centered && "mx-auto md:max-w-5xl",
@@ -348,7 +338,6 @@ export default function Shell(props: {
               {/* add padding to content for mobile navigation*/}
               <div className="block pt-12 md:hidden" />
             </div>
-            <LicenseBanner />
           </main>
         </div>
       </div>

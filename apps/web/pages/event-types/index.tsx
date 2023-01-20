@@ -355,6 +355,7 @@ const EventTypesPage = () => {
         heading={t("event_types_page_title")}
         subtitle={t("event_types_page_subtitle")}
         CTA={
+          false &&
           query.data &&
           query.data.eventTypeGroups.length !== 0 && (
             <CreateEventTypeButton
@@ -400,9 +401,9 @@ const EventTypesPage = () => {
                 </Fragment>
               ))}
 
-              {data.eventTypeGroups.length === 0 && (
+              {/*{data.eventTypeGroups.length === 0 && (
                 <CreateFirstEventTypeView profiles={data.profiles} canAddEvents={data.viewer.canAddEvents} />
-              )}
+              )}*/}
             </>
           )}
         />

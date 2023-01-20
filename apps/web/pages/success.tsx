@@ -32,7 +32,7 @@ dayjs.extend(timezone);
 export default function Success(props: inferSSRProps<typeof getServerSideProps>) {
   const { t } = useLocale();
   const router = useRouter();
-  const { location: _location, name, reschedule } = router.query;
+  const { location: _location, name, reschedule, agreedFee, agreedHours } = router.query;
   const location = Array.isArray(_location) ? _location[0] : _location;
 
   const [is24h, setIs24h] = useState(false);
@@ -140,6 +140,10 @@ export default function Success(props: inferSSRProps<typeof getServerSideProps>)
                             ({localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess()})
                           </span>
                         </div>
+                        <div className="mt-6 font-medium">Agreed fee</div>
+                        <div className="col-span-2 mt-6 mb-6">{agreedFee} USD</div>
+                        <div className="mt-6 font-medium">Agreed Duration</div>
+                        <div className="col-span-2 mt-6 mb-6">{agreedHours} h</div>
                         {location && (
                           <>
                             <div className="font-medium">{t("where")}</div>
@@ -368,7 +372,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      hideBranding: eventType.team ? eventType.team.hideBranding : isBrandingHidden(eventType.users[0]),
+      hideBranding: true,
       profile,
       eventType,
       trpcState: ssr.dehydrate(),

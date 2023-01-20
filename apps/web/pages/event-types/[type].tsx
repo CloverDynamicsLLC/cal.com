@@ -700,6 +700,8 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                         </span>
                         <input
                           type="text"
+                          readOnly
+                          disabled
                           required
                           className="focus:border-primary-500 focus:ring-primary-500 block w-full min-w-0 flex-1 rounded-none rounded-r-sm border-gray-300 sm:text-sm"
                           defaultValue={eventType.slug}
@@ -1351,7 +1353,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                 <LinkIcon className="h-4 w-4 text-neutral-500 ltr:mr-2 rtl:ml-2" />
                 {t("copy_link")}
               </button>
-              <Dialog>
+              {/*<Dialog>
                 <DialogTrigger className="text-md flex items-center rounded-sm px-2 py-1 text-sm font-medium text-neutral-700 hover:bg-gray-200 hover:text-gray-900">
                   <TrashIcon className="h-4 w-4 text-neutral-500 ltr:mr-2 rtl:ml-2" />
                   {t("delete")}
@@ -1363,7 +1365,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                   onConfirm={deleteEventTypeHandler}>
                   {t("delete_event_type_description")}
                 </ConfirmationDialogContent>
-              </Dialog>
+              </Dialog>*/}
             </div>
           </div>
         </div>

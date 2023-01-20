@@ -41,6 +41,8 @@ type BookingPageProps = BookPageProps | TeamBookingPageProps;
 type BookingFormValues = {
   name: string;
   email: string;
+  agreedFee: number;
+  agreedHours: number;
   notes?: string;
   locationType?: LocationType;
   guests?: string[];
@@ -68,7 +70,7 @@ const BookingPage = (props: BookingPageProps) => {
 
   const mutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
-      const { attendees, paymentUid } = responseData;
+      const { attendees, paymentUid, agreedFee, agreedHours } = responseData;
       if (paymentUid) {
         return await router.push(
           createPaymentLink({
@@ -102,6 +104,8 @@ const BookingPage = (props: BookingPageProps) => {
           reschedule: !!rescheduleUid,
           name: attendees[0].name,
           email: attendees[0].email,
+          agreedFee,
+          agreedHours,
           location,
         },
       });
@@ -173,6 +177,8 @@ const BookingPage = (props: BookingPageProps) => {
     return {
       name: primaryAttendee.name || "",
       email: primaryAttendee.email || "",
+      agreedFee: props.booking.agreedFee,
+      agreedHours: props.booking.agreedHours,
       guests: props.booking.attendees.slice(1).map((attendee) => attendee.email),
     };
   };
@@ -360,9 +366,54 @@ const BookingPage = (props: BookingPageProps) => {
                       <EmailInput
                         {...bookingForm.register("email")}
                         required
+                        //disabled
                         className="focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black dark:border-gray-900 dark:bg-black dark:text-white sm:text-sm"
                         placeholder="you@example.com"
                       />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="agreedFee"
+                      className="block text-sm font-medium text-gray-700 dark:text-white">
+                      Agreed Fee (USD)
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        {...bookingForm.register("agreedFee")}
+                        disabled={!!rescheduleUid}
+                        type="number"
+                        name="agreedFee"
+                        id="agreedFee"
+                        min="100"
+                        step="100"
+                        required
+                        className="focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black dark:border-gray-900 dark:bg-black dark:text-white sm:text-sm"
+                        placeholder="100"
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="agreedHours"
+                      className="block text-sm font-medium text-gray-700 dark:text-white">
+                      Agreed Duration
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        {...bookingForm.register("agreedHours")}
+                        disabled={!!rescheduleUid}
+                        type="number"
+                        name="agreedHours"
+                        id="agreedHours"
+                        min="1"
+                        max="12"
+                        step="1"
+                        required
+                        className="focus:border-brand w-17 mr-1 rounded-sm border-gray-300 shadow-sm focus:ring-black dark:border-gray-900 dark:bg-black dark:text-white sm:text-sm"
+                        placeholder="1"
+                      />{" "}
+                      Hours
                     </div>
                   </div>
                   {locations.length > 1 && (
