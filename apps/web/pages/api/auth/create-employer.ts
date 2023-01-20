@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { employerId, email, employerName } = req.body;
 
   const username = slugify(employerName);
+
   //const email = getEmployerEmail(employerId);
   const hashedPassword = await hashPassword(employerPassword);
 
@@ -41,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       plan: "PRO",
     },
   });
-
+  console.log(user);
   await prisma.eventType.create({
     data: {
       userId: user.id,

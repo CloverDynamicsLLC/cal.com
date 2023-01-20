@@ -61,7 +61,10 @@ const TwilioVideoApiAdapter = (): VideoApiAdapter => {
       let endDate = new Date(Date.now() + 4 * (60 * 60 * 1000));
       await client.video.rooms
         .create({ uniqueName: "we2ee2", maxParticipants: 2, maxParticipantDuration: 14400 })
-        .then((room) => (urlT = room.url))
+        .then((room) => {
+          urlT = room.url;
+          console.log(room);
+        })
         .catch((err) => console.log(err));
       return Promise.resolve({
         type: "twilio_video",

@@ -57,9 +57,9 @@ export interface CalendarEvent {
   destinationCalendar?: DestinationCalendar | null;
   cancellationReason?: string | null;
   rejectionReason?: string | null;
-  confirmed?: boolean,
-  rejected?: boolean,
-  status?: string,
+  confirmed?: boolean;
+  rejected?: boolean;
+  status?: string;
 }
 
 export interface IntegrationCalendar extends Ensure<Partial<SelectedCalendar>, "externalId"> {
