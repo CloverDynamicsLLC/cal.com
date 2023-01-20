@@ -376,6 +376,7 @@ const loggedInViewerRouter = createProtectedRouter()
           startTime: true,
           endTime: true,
           agreedFee: true,
+          agreedHours: true,
           currency: true,
           eventType: {
             select: {

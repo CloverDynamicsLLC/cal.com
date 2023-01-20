@@ -247,6 +247,7 @@ model Booking {
   cancellationReason           String?
   rejectionReason              String?
   agreedFee                    Int                  @default(100)
+  agreedHours                  Int                  @default(1)
   currency                     String               @default("USD")
   requiresCustomerConfirmation Boolean              @default(false)
   customerConfirmed            Boolean              @default(false)

@@ -11,6 +11,7 @@ import { v5 as uuidv5 } from "uuid";
 
 import { handlePayment } from "@ee/lib/stripe/server";
 
+import { getSession } from "@lib/auth";
 import {
   sendScheduledEmails,
   sendRescheduledEmails,
@@ -34,7 +35,6 @@ import getSubscribers from "@lib/webhooks/subscriptions";
 import { getTranslation } from "@server/lib/i18n";
 
 import verifyAccount from "../../../web3/utils/verifyAccount";
-import {getSession} from "@lib/auth";
 
 dayjs.extend(dayjsBusinessTime);
 dayjs.extend(utc);
@@ -338,6 +338,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     startTime: reqBody.start,
     endTime: reqBody.end,
     agreedFee: reqBody.agreedFee,
+    agreedHours: reqBody.agreedHours,
     organizer: {
       name: users[0].name || "Nameless",
       email: users[0].email || "Email-less",
@@ -378,6 +379,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         uid,
         title: evt.title,
         agreedFee: Number(evt.agreedFee),
+        agreedHours: Number(evt.agreedHours),
         startTime: dayjs(evt.startTime).toDate(),
         endTime: dayjs(evt.endTime).toDate(),
         description: evt.description,

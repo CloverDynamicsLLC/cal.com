@@ -78,6 +78,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       select: {
         description: true,
         agreedFee: true,
+        agreedHours: true,
         currency: true,
         attendees: {
           select: {

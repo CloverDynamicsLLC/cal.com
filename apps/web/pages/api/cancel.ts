@@ -36,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: true,
       userId: true,
       agreedFee: true,
+      agreedHours: true,
       currency: true,
       user: {
         select: {
@@ -120,6 +121,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     startTime: bookingToDelete?.startTime ? dayjs(bookingToDelete.startTime).format() : "",
     endTime: bookingToDelete?.endTime ? dayjs(bookingToDelete.endTime).format() : "",
     agreedFee: bookingToDelete.agreedFee,
+    agreedHours: bookingToDelete.agreedHours,
     currency: bookingToDelete.currency,
     organizer: {
       email: organizer.email,
@@ -185,6 +187,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       startTime: bookingToDelete.startTime.toISOString(),
       endTime: bookingToDelete.endTime.toISOString(),
       agreedFee: bookingToDelete.agreedFee,
+      agreedHours: bookingToDelete.agreedHours,
       organizer: {
         email: bookingToDelete.user?.email ?? "dev@calendso.com",
         name: bookingToDelete.user?.name ?? "no user",

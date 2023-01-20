@@ -41,6 +41,7 @@ export interface CalendarEvent {
   endTime: string;
   description?: string | null;
   agreedFee: number;
+  agreedHours: number;
   currency?: string;
   team?: {
     name: string;
@@ -60,9 +61,9 @@ export interface CalendarEvent {
   confirmed?: boolean;
   rejected?: boolean;
   status?: string;
-  rescheduled?: boolean,
-  requiresCustomerConfirmation?: boolean,
-  customerConfirmed?: boolean,
+  rescheduled?: boolean;
+  requiresCustomerConfirmation?: boolean;
+  customerConfirmed?: boolean;
 }
 
 export interface IntegrationCalendar extends Ensure<Partial<SelectedCalendar>, "externalId"> {

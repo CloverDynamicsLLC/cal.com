@@ -12,10 +12,10 @@ import { CalendarEvent, AdditionInformation } from "@lib/integrations/calendar/i
 import logger from "@lib/logger";
 import prisma from "@lib/prisma";
 import { BookingConfirmBody } from "@lib/types/booking";
+import sendPayload from "@lib/webhooks/sendPayload";
+import getSubscribers from "@lib/webhooks/subscriptions";
 
 import { getTranslation } from "@server/lib/i18n";
-import getSubscribers from "@lib/webhooks/subscriptions";
-import sendPayload from "@lib/webhooks/sendPayload";
 
 const authorized = async (
   currentUser: Pick<User, "id">,
@@ -109,6 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       select: {
         agreedFee: true,
+        agreedHours: true,
         title: true,
         description: true,
         startTime: true,
@@ -160,6 +161,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       startTime: booking.startTime.toISOString(),
       endTime: booking.endTime.toISOString(),
       agreedFee: booking.agreedFee,
+      agreedHours: booking.agreedHours,
       organizer: {
         email: currentUser.email,
         name: currentUser.name || "Unnamed",

@@ -20,6 +20,7 @@ async function getBooking(bookingId) {
     },
     select: {
       agreedFee: true,
+      agreedHours: true,
       title: true,
       description: true,
       startTime: true,

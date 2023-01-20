@@ -168,6 +168,12 @@ function BookingListItem(booking: BookingItem) {
               </span>
             </div>
           )}
+          {booking.agreedHours !== 0 && (
+            <div className="mt-3 text-sm text-gray-900">
+              <span className="text-sm font-medium">Agreed fee:</span>
+              <span className="ml-3">{booking.agreedHours} h</span>
+            </div>
+          )}
           {/*{booking.rescheduled && booking.requiresCustomerConfirmation && !booking.customerConfirmed && (
             <div className="mt-3 text-sm text-gray-900">
               <span className="text-sm font-medium text-red-600">
